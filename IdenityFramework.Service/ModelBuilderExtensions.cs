@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
-namespace IdenityFramework.Service
+namespace IdentityFramework.Service
 {
     public static class ModelBuilderExtensions
     {

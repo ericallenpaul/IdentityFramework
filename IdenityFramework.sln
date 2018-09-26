@@ -5,7 +5,7 @@ VisualStudioVersion = 15.0.27703.2047
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IdenityFramework.API", "IdenityFramework.API\IdenityFramework.API.csproj", "{8C9DE56A-1C0E-4544-A1F0-C4C71527F731}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IdenityFramework.Models", "IdenityFramework.Models\IdenityFramework.Models.csproj", "{D478064B-394D-4F9E-828D-2841666F50D8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IdentityFramework.Models", "IdenityFramework.Models\IdentityFramework.Models.csproj", "{D478064B-394D-4F9E-828D-2841666F50D8}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IdentityFramework.Service", "IdenityFramework.Service\IdentityFramework.Service.csproj", "{A4E0D3C1-AD9D-4A32-A860-418409304C43}"
 EndProject

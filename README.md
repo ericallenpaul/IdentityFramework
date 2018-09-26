@@ -109,6 +109,7 @@ public static class ModelBuilderExtensions
 	}
 }
 
+Add a DBContext class
 
 
 
@@ -144,7 +145,8 @@ Generate Terms Of service - https://formswift.com/terms-of-service, https://term
 
 
 
-
+http://sikorsky.pro/en/blog/aspnet-core-custom-user-manager
+https://github.com/DmitrySikorsky/AspNetCoreCustomUserManager/tree/master/AspNetCoreCustomUserManager/Data
 
 
 
@@ -154,3 +156,8 @@ Generate Terms Of service - https://formswift.com/terms-of-service, https://term
 .Cli
  Add some configuration files to support dependencey injection
 
+ 
+ 
+ Enumeration Classes
+ https://docs.microsoft.com/en-us/dotnet/standard/microservices-architecture/microservice-ddd-cqrs-patterns/enumeration-classes-over-enum-types
+ https://lostechies.com/jimmybogard/2008/08/12/enumeration-classes/

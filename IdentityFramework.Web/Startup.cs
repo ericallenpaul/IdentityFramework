@@ -10,6 +10,8 @@ using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using IdentityFramework.Web.Data;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Builder.Internal;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -34,6 +36,8 @@ namespace IdentityFramework.Web
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
+            services.AddAuthentication().AddCookie(ConfigureCookieOptions);
+
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
@@ -41,6 +45,13 @@ namespace IdentityFramework.Web
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+        }
+
+        private void ConfigureCookieOptions(CookieAuthenticationOptions Obj)
+        {
+            Obj.Cookie.Name = "AspNetCoreCustomUserManager";
+            Obj.Cookie.Expiration = TimeSpan.FromMinutes(20);
+            Obj.SlidingExpiration = true;
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
