@@ -1,22 +1,20 @@
 # IdentityFramework
 Put all of the pieces in place for the .Net Core Identity Framework and separate DBContext
-
+Break IF into seperate class
+Hold the Database Context in a seperate class
 
 
 Install .Net Core SDK and .Net Core Hosting Package
 Download and Install Syncfusion ES2/MVC
 
-Create the new projects:
+### Create the new projects:
 
-Create Web Api - ProjectName.Api, .Net Core, Not RazorPages, Add Authentication for individual accounts
-Create Command Line - ProjectName.Cli, .Net Core
-Create The models Library - ProjectName.Models, .Net Standard 2.0
-Create The Service Layer - ProjectName.Service, .Net Standard 2.0
-Use Identity Framework
-Break IF into seperate class
-Hold the Database Context in a seperate class
-
-Create the Web site - ProjectName.Web, .Net Core MVC, add Individual Authentication
+**1. Create an empty Solution** - [ProjectName].sln *(Listed under "other project types")*
+**2. Create Web Api - [ProjectName].Api** (.Net Core, Not RazorPages, Add Authentication for individual accounts)
+3. Create Command Line - [ProjectName].Cli, (.Net Core)
+4. Create The models Library - [ProjectName].Models (.Net Core)
+5. Create The Service Layer - [ProjectName].Service (.Net Core)
+6. Create the Web site - ProjectName.Web (.Net Core MVC, add Individual Authentication)
 
 Add Nuget Packages:
 
