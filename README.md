@@ -9,36 +9,35 @@ Download and Install Syncfusion ES2/MVC
 
 ### Create the new projects:
 
-**1. Create an empty Solution** - [ProjectName].sln *(Listed under "other project types")*
-**2. Create Web Api - [ProjectName].Api** (.Net Core, Not RazorPages, Add Authentication for individual accounts)
-3. Create Command Line - [ProjectName].Cli, (.Net Core)
-4. Create The models Library - [ProjectName].Models (.Net Core)
-5. Create The Service Layer - [ProjectName].Service (.Net Core)
-6. Create the Web site - ProjectName.Web (.Net Core MVC, add Individual Authentication)
+**1. Create an empty Solution** - [ProjectName].sln *(Listed under "other project types")*  
+**2. Create Web Api** - [ProjectName].Api (.Net Core, Not RazorPages, Add Authentication for individual accounts)  
+**3. Create Command Line** - [ProjectName].Cli, (.Net Core)  
+**4. Create The models Library** - [ProjectName].Models (.Net Core)  
+**5. Create The Service Layer**- [ProjectName].Service (.Net Core)  
+**6. Create the Web site** - ProjectName.Web (.Net Core MVC, add Individual Authentication)  
 
-Add Nuget Packages:
+### Add Nuget Packages:
 
-.Api
-	Microsoft.Rest.ClientRunTime
-	NLog.Web.AspNetCore
-	Swashbuckle.AspNetCore
-	Swashbuckle.AspNetCore.SwaggerUi
-	Swashbuckle.AspNetCore.SwaggerGen
-	Swashbuckle.AspNetCore.Annotations
+###### .Api  
+    Install-Package Microsoft.Rest.ClientRunTime
+    Install-Package NLog.Web.AspNetCore
+    Install-Package Swashbuckle.AspNetCore
+    Install-Package Swashbuckle.AspNetCore.SwaggerUi
+    Install-Package Swashbuckle.AspNetCore.SwaggerGen
+    Install-Package Swashbuckle.AspNetCore.Annotations
 	
-.Cli
-	CommandLineParser
-	Newtonsoft.json
-	Nlog
-	Microsoft.Extensions.DependencyInjection
-	StructureMap.Microsoft.DependencyInjection (https://andrewlock.net/using-dependency-injection-in-a-net-core-console-application/)
+###### .Cli
+    Install-Package CommandLineParser
+    Install-Package Newtonsoft.json
+    Install-Package Nlog
+    Install-Package Microsoft.Extensions.DependencyInjection
+    Install-Package StructureMap.Microsoft.DependencyInjection (https://andrewlock.net/using-dependency-injection-in-a-net-core-console-application/)
 
-.Models
-	Microsoft.AspNetCore.Identity.EntityFrameworkCore
-	Microsoft.AspNetCore.Owin
+###### .Models
+    Nothing to do here
 
-.Service
-	Install-Package Microsoft.EntityFrameworkCore
+###### .Service
+    Install-Package Microsoft.EntityFrameworkCore
 	Install-Package Microsoft.EntityFrameworkCore.Design
 	Install-Package Microsoft.EntityFrameworkCore.Tools
 	Install-Package Microsoft.EntityFrameworkCore.SqlServer
@@ -49,12 +48,7 @@ Add Nuget Packages:
 	Install-Package System.Linq.Dynamic.Core
 	Install-Package Automapper
 
-
-	.Net standard compatibility
-Add <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects> to the initial property group
-	
-	
-Project Configuration
+### Project Configuration
 
 
 
@@ -65,6 +59,10 @@ Copy .Web Migrations folder to services
 Change the Namespace on the three .cs files and remove the using statement "using IdentityFramework.Web.Data;" (i.e. IdentityFramework.Web.Data.Migrations to IdentityFramework.Service
 
 Delete the data folder from .Web
+
+Add a refrence to the .Service project
+
+Fix startup -- add using statement
 
 Scaffold identity into the web project, right-click on the project > Add > New Scaffolded Item. 
 From the left pane of the Add Scaffold dialog, select Identity > ADD. In the ADD Identity dialog, select all options. 
