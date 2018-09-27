@@ -14,4 +14,8 @@
     <ProjectReference Include="..\IdentityFramework.Service\IdentityFramework.Service.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Areas\Identity\Services\" />
+  </ItemGroup>
+
 </Project>

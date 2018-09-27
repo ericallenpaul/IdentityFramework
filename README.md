@@ -56,7 +56,7 @@ Copy .Web ApplicationDbContext to service (change the namespace)
 
 Copy .Web Migrations folder to services
 
-Change the Namespace on the three .cs files and remove the using statement "using IdentityFramework.Web.Data;" (i.e. IdentityFramework.Web.Data.Migrations to IdentityFramework.Service
+Change the Namespace on the three .cs files (.Service.Migrations) and remove the using statement "using IdentityFramework.Web.Data;" (i.e. IdentityFramework.Web.Data.Migrations to IdentityFramework.Service
 
 Delete the data folder from .Web
 
@@ -64,9 +64,11 @@ Add a refrence to the .Service project
 
 Fix startup -- add using statement
 
-Scaffold identity into the web project, right-click on the project > Add > New Scaffolded Item. 
-From the left pane of the Add Scaffold dialog, select Identity > ADD. In the ADD Identity dialog, select all options. 
-Select your existing layout page ~/Pages/Shared/_Layout.cshtml Select the exsiting Data context class (ApplicationDbContext). Select ADD.
+Scaffold identity into the web project, right-click on the project > Add > New Scaffolded Item.  
+From the left pane of the Add Scaffold dialog, select Identity > ADD. In the ADD Identity dialog, select "override all files".  
+Select the Data context class from the .Service project (ApplicationDbContext).  
+Click the ADD button.  
+This will create all of the pages need to allow a user to register and login.  
 
 Add Appsettings.Production.json
 
