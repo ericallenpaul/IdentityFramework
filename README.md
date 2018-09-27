@@ -16,7 +16,7 @@ Use Identity Framework
 Break IF into seperate class
 Hold the Database Context in a seperate class
 
-Create the Web site - ProjectName.Web, .Net Core MVC
+Create the Web site - ProjectName.Web, .Net Core MVC, add Individual Authentication
 
 Add Nuget Packages:
 
@@ -36,103 +36,41 @@ Add Nuget Packages:
 	StructureMap.Microsoft.DependencyInjection (https://andrewlock.net/using-dependency-injection-in-a-net-core-console-application/)
 
 .Models
-	Nothing to do here
+	Microsoft.AspNetCore.Identity.EntityFrameworkCore
+	Microsoft.AspNetCore.Owin
 
 .Service
-	Microsoft.EntityFrameworkCore
-	Microsoft.EntityFrameworkCore.Design
-	Microsoft.EntityFrameworkCore.Tools
-	Microsoft.EntityFrameworkCore.SqlServer
-	Microsoft.AspNet.Identity.EntityFramework
-	Microsoft.AspNet.Identity.Owin
-	Newtonsoft.json
-	Nlog
-	DnsClient
-	System.Linq.Dynamic.Core
+	Install-Package Microsoft.EntityFrameworkCore
+	Install-Package Microsoft.EntityFrameworkCore.Design
+	Install-Package Microsoft.EntityFrameworkCore.Tools
+	Install-Package Microsoft.EntityFrameworkCore.SqlServer
+	Install-Package Microsoft.AspNetCore.Identity.EntityFrameworkCore
+	Install-Package Microsoft.AspNetCore.Owin
+	Install-Package Newtonsoft.json
+	Install-Package Nlog
+	Install-Package System.Linq.Dynamic.Core
+	Install-Package Automapper
 
 
-
+	.Net standard compatibility
+Add <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects> to the initial property group
+	
+	
 Project Configuration
 
-.Service
-
-Add a new class file named "ApplicationDbContext".
-Add the following code:
-
-public class ApplicationUser : IdentityUser
-{
-	public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<ApplicationUser> manager, string authenticationType)
-	{
-		// Note the authenticationType must match the one defined in CookieAuthenticationOptions.AuthenticationType
-		var userIdentity = await manager.CreateIdentityAsync(this, authenticationType);
-		// Add custom user claims here
-		return userIdentity;
-	}
-}
-
-public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
-{
-	public ApplicationDbContext() : base("DefaultConnection", throwIfV1Schema: false)
-	{
-	}
-
-	public static ApplicationDbContext Create()
-	{
-		return new ApplicationDbContext();
-	}
-}
 
 
+Copy .Web ApplicationDbContext to service (change the namespace)
 
-Add a model builder extensions class.
-Put in the follwoing code:
+Copy .Web Migrations folder to services
 
-public static class ModelBuilderExtensions
-{
-	public static void RemovePluralizingTableNameConvention(this ModelBuilder modelBuilder)
-	{
-		foreach (IMutableEntityType entity in modelBuilder.Model.GetEntityTypes())
-		{
-			entity.Relational().TableName = entity.DisplayName();
-		}
-	}
+Change the Namespace on the three .cs files and remove the using statement "using IdentityFramework.Web.Data;" (i.e. IdentityFramework.Web.Data.Migrations to IdentityFramework.Service
 
-	public static void Seed(this ModelBuilder modelBuilder)
-	{
-		//seed the DB
-		//modelBuilder.Entity<SOME_Custom_Object>().HasData(
+Delete the data folder from .Web
 
-		//    new SOME_Custom_Object { Prop1 = 1, Prop2 = "zoo" },
-		//    new SOME_Custom_Object { Prop1 = 2, Prop2 = "zoo2" }
-		//);
-
-	}
-}
-
-Add a DBContext class
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-.Web
-
-Scaffold identity into an empty project
-From Solution Explorer, right-click on the project > Add > New Scaffolded Item.
-From the left pane of the Add Scaffold dialog, select Identity > ADD.
-In the ADD Identity dialog, select all options.
-Select your existing layout page  ~/Pages/Shared/_Layout.cshtml 
-Select the exsiting Data context class (ApplicationDbContext).
-Select ADD.
+Scaffold identity into the web project, right-click on the project > Add > New Scaffolded Item. 
+From the left pane of the Add Scaffold dialog, select Identity > ADD. In the ADD Identity dialog, select all options. 
+Select your existing layout page ~/Pages/Shared/_Layout.cshtml Select the exsiting Data context class (ApplicationDbContext). Select ADD.
 
 Add Appsettings.Production.json
 
@@ -161,3 +99,4 @@ https://github.com/DmitrySikorsky/AspNetCoreCustomUserManager/tree/master/AspNet
  Enumeration Classes
  https://docs.microsoft.com/en-us/dotnet/standard/microservices-architecture/microservice-ddd-cqrs-patterns/enumeration-classes-over-enum-types
  https://lostechies.com/jimmybogard/2008/08/12/enumeration-classes/
+ https://eliot-jones.com/2015/3/entity-framework-enum

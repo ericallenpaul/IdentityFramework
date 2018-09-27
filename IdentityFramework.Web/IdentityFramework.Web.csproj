@@ -2,12 +2,16 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.1</TargetFramework>
-    <UserSecretsId>aspnet-IdentityFramework.Web-639EA3AD-7D17-4617-922A-0AA49F9BED10</UserSecretsId>
+    <UserSecretsId>aspnet-IdentityFramework.Web-1A20425D-601D-459B-9E81-BC2B4FC9E0CC</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.1.1" PrivateAssets="All" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\IdentityFramework.Service\IdentityFramework.Service.csproj" />
   </ItemGroup>
 
 </Project>
