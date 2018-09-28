@@ -167,11 +167,11 @@ and then add some attributes the first Get method:
         return new string[] { "value1", "value2" };
     }   
 
-
+Add similar attributes to the rest of the methods.
 You will need to change the method name of the second "Get" statement, because swagger won't work if you have multiple methods with the same name which are the same http action (even if they take different parameters). You can just change it to "GetById" and everything should work.
 Now you should be able to run the API and see the swagger interface:
 
-
+![swaggerImage](https://github.com/ericallenpaul/IdentityFramework/blob/master/swagger.png?raw=true)
 
 
 ##### Add Settings
