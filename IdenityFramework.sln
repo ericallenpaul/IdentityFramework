@@ -3,15 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27703.2047
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IdenityFramework.API", "IdenityFramework.API\IdenityFramework.API.csproj", "{8C9DE56A-1C0E-4544-A1F0-C4C71527F731}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IdentityFramework.API", "IdenityFramework.API\IdentityFramework.API.csproj", "{8C9DE56A-1C0E-4544-A1F0-C4C71527F731}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IdenityFramework.Cli", "IdenityFramework.Cli\IdenityFramework.Cli.csproj", "{21595DA6-E541-4704-B19C-68EBB3452EC6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IdentityFramework.Web", "IdentityFramework.Web\IdentityFramework.Web.csproj", "{E72B567A-244D-42DF-9356-6CD595931C91}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IdentityFramework.Web", "IdentityFramework.Web\IdentityFramework.Web.csproj", "{E72B567A-244D-42DF-9356-6CD595931C91}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IdentityFramework.Service", "IdentityFramework.Service\IdentityFramework.Service.csproj", "{F40169CF-914A-4940-891D-85AE446DCA10}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IdentityFramework.Service", "IdentityFramework.Service\IdentityFramework.Service.csproj", "{F40169CF-914A-4940-891D-85AE446DCA10}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IdentityFramework.Models", "IdentityFramework.Models\IdentityFramework.Models.csproj", "{E25AEF95-B1C2-4F2D-814E-E5EBA9C4C4B3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IdentityFramework.Models", "IdentityFramework.Models\IdentityFramework.Models.csproj", "{E25AEF95-B1C2-4F2D-814E-E5EBA9C4C4B3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
