@@ -136,9 +136,11 @@ and paste in the following code
     }
 Set the startup to match the specified url "api-docs". Richt-click the project and select properties. On the build tab set the field next to "Launch Browser" to "api-docs".
 
+![vsProperties](https://github.com/ericallenpaul/IdentityFramework/blob/master/SetOptions.png?raw=true)
+
 Now we need to add Swagger to the startup.cs file. In the ConfigureServiceMethod add:
 
-services.AddSwaggerGen(SwaggerHelper.ConfigureSwaggerGen);
+    services.AddSwaggerGen(SwaggerHelper.ConfigureSwaggerGen);
 
 then in the configure method add
 
