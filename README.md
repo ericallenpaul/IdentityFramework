@@ -228,12 +228,17 @@ Now all I need to do is make sure I have the right environment variables set. En
     [Environment]::SetEnvironmentVariable("ASPNETCORE_ENVIRONMENT", "Development", "User")
     [Environment]::SetEnvironmentVariable("ASPNETCORE_ENVIRONMENT", "Development", "Machine")
 
+The last step is to wire up the settings in the `startup.cs` file. In the configure services method I added the following code:
 
+            services.Configure<IdentityFrameworkSettings>(Options =>
+                Configuration.GetSection("IdentityFrameworkSettings").Bind(Options));
 
-
-
+Now we have a class that will be populated with all of our settings. Any Controller with a constructor using "IdentityFrameworkSettings" will automatically be wired up through dependency injection.
 
 ##### Configure AutoMapper
+Now we need to configure 
+
+
 
 ##### Configure Identity  
 Since we already installed the correct libraries all we need to do now is configure IdentityFramework in the API. Start by changing the MVC Config.  

@@ -33,8 +33,12 @@ namespace IdentityFramework.API
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
+
             services.AddDefaultIdentity<IdentityUser>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
+
+            services.Configure<IdentityFrameworkSettings>(Options =>
+                Configuration.GetSection("IdentityFrameworkSettings").Bind(Options));
 
             //add swagger
             services.AddSwaggerGen(SwaggerHelper.ConfigureSwaggerGen);
