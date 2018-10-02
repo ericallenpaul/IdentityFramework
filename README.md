@@ -180,7 +180,58 @@ Now you should be able to run the API and see the swagger interface:
 
 
 ##### Add Settings
-Add Appsettings.Production.json
+Now it's time to add settings to our API. Settings in .Net core are strongly typed and all driven by JSON files.
+The first thing we need to do is add a settings class. Add a class called IdentityFrameworkSettings. 
+Populate this class with properties that match the settings in the JSON file. For now will just add one property "ConnectionString". (In a more simple configuration ConnectionString would get it's own section but since we'll be injecting this string into our service we'll make it a setting.)
+
+    public class IdentityFrameworkSettings
+    {
+        public string ConnectionString { get; set; }
+    }
+
+Now we need to add the corresponding property to our JSON file, specifically the appsettings.Development.json file. This is what it will look like after our settings section is added:
+
+    {
+      "Logging": {
+        "LogLevel": {
+          "Default": "Debug",
+          "System": "Information",
+          "Microsoft": "Information"
+        }
+      },
+      "IdentityFrameworkSettings": {
+        "ConnectionString": "Server=(localdb)\\MSSQLLocalDB;Database=IdentityFrameworkDb;Trusted_Connection=True;MultipleActiveResultSets=true"
+      }
+    }
+
+We used the same connection string that we used in our service "IDesignTimeDbContextFactory".
+Now we need to add a settings file for production. Right-click and select "New Item..." and then Web and look for "App Settings File". Name it appsettings.Production.json and click save.
+
+![appsettings](https://github.com/ericallenpaul/IdentityFramework/blob/master/appsettings.png?raw=true)
+
+Copy and paste the development settings file and change values as needed. There really is no limit to the number of settings file you can have. You can have one for each environment so you could have appsettings.Testing.Json, appsettings.Staging.json, etc.
+Next we need to add a bit of code to get the project to honor our environment variables. In `program.cs` I add a static string to reference the environment variable and an IconFigurationRoot variable:
+
+    private static IConfigurationRoot _configuration;
+	private static string env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+
+Then I add the following configuration code in the main method:
+
+            _configuration = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+                .AddJsonFile($"appsettings.{env}.json", optional: true)
+                .Build();
+
+Now all I need to do is make sure I have the right environment variables set. Environment variables can be set a number of different ways but I think the easiest is to just use powershell. Open an administrative powershell window and enter the following commands:
+
+    [Environment]::SetEnvironmentVariable("ASPNETCORE_ENVIRONMENT", "Development", "User")
+    [Environment]::SetEnvironmentVariable("ASPNETCORE_ENVIRONMENT", "Development", "Machine")
+
+
+
+
+
 
 ##### Configure AutoMapper
 
