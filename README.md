@@ -89,11 +89,14 @@ Click the ADD button.
 This will create all of the pages need to allow a user to register and login.  
 
 ### API Configuration
-Now it's time to work on our API project. The API Project will use Swagger which will both provide documentation and provide an easy way to test our code.
+Now it's time to work on our API project. The API Project will use Swagger which will provide both documentation and an easy way to test our code.
 
 ##### Configure Swagger 
-Swagger will automatically generate both a testing platform and include documentation. It pulls the documentation for the standard XML documentation comments, so we need to turn that on in both the API and model projects.  
+Swagger is pretty much the best thing since sliced bread. It allows us to test and document our API all at the same time. It pulls the documentation from standard XML documentation comments, so we need to turn on XML documentation in both the API and model projects.  
 Right-click on the API project and choose properties. Then click the build tab, scroll down, and check the "XML documentation file" box. Repeat this for the models project. Make sure you note the name of the files, we'll need these for the next step.  
+
+![xmlDocs](https://github.com/ericallenpaul/IdentityFramework/blob/master/XmlDocs.png?raw=true)
+
 Create a new class called SwaggerHelper add the following using statements:
 
     using Microsoft.AspNetCore.Builder;
