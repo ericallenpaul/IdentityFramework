@@ -279,6 +279,21 @@ Also add
      app.UseCookiePolicy();
      app.UseAuthentication();
              
+             
+             
+             
+             
+### Configuring the user service             
+             
+ add ref to 
+ using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
+
+
+             
+             
+             
+             
 Generate Terms Of service - https://formswift.com/terms-of-service, https://termsofservicegenerator.net/, https://termsfeed.com/terms-service/generator/ ($$$)
 
 
