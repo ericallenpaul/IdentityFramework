@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Security.Claims;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
 using System.Security.Policy;
 using System.Text;
 using System.Text.Encodings.Web;
@@ -7,11 +10,11 @@ using System.Threading.Tasks;
 using AutoMapper;
 using IdentityFramework.Models;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+
 using NLog;
 
 namespace IdentityFramework.Service
@@ -20,7 +23,7 @@ namespace IdentityFramework.Service
     {
         Task<IdentityResult> Register(string Email, string Password);
 
-        Task<SignInResult> Login(string Email, string Password, bool RememberMe);
+        Task<string> Login(string Email, string Password, bool RememberMe);
     }
 
     public class UserService : IUserService
@@ -33,6 +36,7 @@ namespace IdentityFramework.Service
         private readonly UserManager<IdentityUser> _UserManager;
         private readonly SignInManager<IdentityUser> _SignInManager;
         private readonly IEmailService _emailService;
+        private readonly IIdentityFramework_JWT _TokenOptions;
 
 
         private ModelStateDictionary _modelState;
@@ -45,6 +49,7 @@ namespace IdentityFramework.Service
             UserManager<IdentityUser> UserManager,
             SignInManager<IdentityUser> SignInManager,
             ILogger<UserService> Logger,
+            IOptions<IdentityFramework_JWT> TokenOptions,
             IEmailService emailService
         )
         {
@@ -56,6 +61,7 @@ namespace IdentityFramework.Service
             _UserManager = UserManager;
             _SignInManager = SignInManager;
             _emailService = emailService;
+            this._TokenOptions = TokenOptions.Value;
         }
 
         protected bool ValidateUser(string Email, string Password)
@@ -67,9 +73,31 @@ namespace IdentityFramework.Service
             return true;
         }
 
-        public async Task<SignInResult> Login(string Email, string Password, bool RememberMe)
+        private string GenerateToken(string username)
         {
-            SignInResult returnvalue = null;
+            var claims = new Claim[]
+            {
+                new Claim(ClaimTypes.Name, username),
+                new Claim(JwtRegisteredClaimNames.Nbf, new DateTimeOffset(DateTime.Now).ToUnixTimeSeconds().ToString()),
+                new Claim(JwtRegisteredClaimNames.Exp, new DateTimeOffset(DateTime.Now.AddDays(1)).ToUnixTimeSeconds().ToString()),
+            };
+
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_TokenOptions.SecretKey));
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+            var token = new JwtSecurityToken(
+                issuer: _TokenOptions.Issuer,
+                audience: _TokenOptions.Audience,
+                claims: claims,
+                expires: DateTime.Now.AddMinutes(60),
+                signingCredentials: creds);
+
+            return new JwtSecurityTokenHandler().WriteToken(token);
+        }
+
+        public async Task<string> Login(string Email, string Password, bool RememberMe)
+        {
+            string returnvalue = null;
             if (ValidateUser(Email, Password))
             {
                 var user = _UserManager.FindByEmailAsync(Email);
@@ -79,17 +107,17 @@ namespace IdentityFramework.Service
                     return returnvalue;
                 }
 
-                returnvalue = await _SignInManager.PasswordSignInAsync(Email, Password, RememberMe, lockoutOnFailure: _Settings.LockoutOnFailure);
-                if (returnvalue.Succeeded)
+                var result = await _SignInManager.PasswordSignInAsync(Email, Password, RememberMe, lockoutOnFailure: _Settings.LockoutOnFailure);
+                if (result.Succeeded)
                 {
                     _Logger.LogInformation("User logged in.");
-                    return returnvalue;
+                    return GenerateToken(Email);
                 }
-                if (returnvalue.RequiresTwoFactor)
+                if (result.RequiresTwoFactor)
                 {
                     _Logger.LogInformation("User requires 2FA.");
                 }
-                if (returnvalue.IsLockedOut)
+                if (result.IsLockedOut)
                 {
                     _Logger.LogWarning("User account locked out.");
                 }

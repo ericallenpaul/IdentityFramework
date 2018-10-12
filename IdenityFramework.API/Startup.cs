@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using IdentityFramework.Models;
 using IdentityFramework.Service;
@@ -18,6 +19,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using NLog.Extensions.Logging;
@@ -68,15 +70,35 @@ namespace IdentityFramework.API
             //wire up the settings
             services.Configure<IdentityFrameworkSettings>(Options =>
                 Configuration.GetSection("IdentityFrameworkSettings").Bind(Options));
+            services.Configure<IdentityFramework_JWT>(Options =>
+                Configuration.GetSection("IdentityFramework_JWT").Bind(Options));
 
             //Register Services
             services.RegisterMyServices();
 
-            services.AddAuthentication(options =>
+            //add a new auth policy
+            //authorize with "var credentials = new TokenCredentials("<bearer token>");"
+            services.AddAuthorization(auth =>
+            {
+                auth.AddPolicy("Bearer", new AuthorizationPolicyBuilder()
+                    .AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme)
+                    .RequireAuthenticatedUser().Build());
+            });
+
+            //add the JWT authentication
+            services.AddAuthentication(options => { options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme; })
+                .AddJwtBearer(cfg =>
                 {
-                    //options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                    //options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-                    options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                    cfg.RequireHttpsMetadata = false;
+                    cfg.SaveToken = true;
+
+                    cfg.TokenValidationParameters = new TokenValidationParameters()
+                    {
+                        ValidIssuer = Configuration["IdentityFramework_JWT:Issuer"],
+                        ValidAudience = Configuration["IdentityFramework_JWT:Audience"],
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(Configuration["IdentityFramework_JWT:SecretKey"]))
+                    };
+
                 });
 
             //add swagger

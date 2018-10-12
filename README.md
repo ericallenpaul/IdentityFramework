@@ -31,8 +31,8 @@ Download and Install Syncfusion ES2/MVC
     Install-Package Microsoft.AspNetCore.Identity.EntityFrameworkCore 
     Install-Package Microsoft.AspNetCore.WebUtilities
     
-    NLog.Extensions.Logging
-    NLog.config
+    Install-Package NLog.Extensions.Logging
+    Install-Package Microsoft.IdentityModel.Tokens
     
     StructureMap.Microsoft.DependencyInjection
 
@@ -120,6 +120,14 @@ and paste in the following code
                 Title = "Identity Framework",
                 Version = $"v1",
                 Description = "An API for testing the Identity Framework"
+            });
+            
+            swaggerGenOptions.AddSecurityDefinition("Bearer", new ApiKeyScheme
+            {
+                Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
+                Name = "Authorization",
+                In = "header",
+                Type = "apiKey"
             });
 
             //include the XML documentation
@@ -247,8 +255,147 @@ Now we need to configure Automapper. Automapper is a great little tool to map th
 NLog.Extensions.Logging
 NLog.config
 
+add nlog config
+
+
+		<?xml version="1.0" encoding="utf-8" ?>
+		<nlog xmlns="http://www.nlog-project.org/schemas/NLog.xsd"
+			  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+			  xsi:schemaLocation="http://www.nlog-project.org/schemas/NLog.xsd NLog.xsd"
+			  autoReload="true"
+			  throwExceptions="false"
+			  internalLogLevel="Off" internalLogFile="c:\temp\nlog-internal.log">
+
+		  <targets>
+			<!-- log to the console -->
+			<target name="console" xsi:type="ColoredConsole" layout="${date:format=HH\:mm\:ss}|${level}|${message}" />
+
+			<!-- log to a file -->
+			<target xsi:type="File"
+					name="allfile"
+					fileName="${basedir}\logs\IdentityFramework\nlog-all.log"
+					archiveFileName="${basedir}\logs\IdentityFramework\nlog-all.{#}.txt"
+					archiveEvery="Day"
+					archiveNumbering="Rolling"
+					maxArchiveFiles="7"
+					layout="${longdate}|${machinename}|${event-properties:item=EventId.Id}|${uppercase:${level}}|${logger}|${message} ${exception}" />
+			
+			<!-- no logging -->
+			<target xsi:type="Null" name="blackhole" />
+		  </targets>
+
+		  <rules>
+			<!--All logs, including from Microsoft-->
+			<logger name="*" minlevel="Trace" writeTo="console, allfile" />
+
+			<!--Skip Microsoft logs and so log only own logs-->
+			<logger name="Microsoft.*" minlevel="Trace" writeTo="blackhole" final="true" />
+			<logger name="*" minlevel="Trace" writeTo="ownFile-web" />
+		  </rules>
+		</nlog>
+
+
+
+set to content and copy always
+
+
+See https://github.com/nlog/nlog/wiki/Configuration-file
+  for information on customizing logging rules and outputs.
+
 ##### Configure Identity  
 Since we already installed the correct libraries all we need to do now is configure IdentityFramework in the API. Start by changing the MVC Config.  
+
+Add a class to models:
+
+IdentityFramework_JWT
+
+add a using statement:
+
+    using Microsoft.IdentityModel.Tokens;
+
+Then add the class and Interface
+
+    public interface IIdentityFramework_JWT
+    {
+        string SecretKey { get; set; }
+        string Issuer { get; set; }
+        string Audience { get; set; }
+        string Username { get; set; }
+        SigningCredentials SigningCredentials { get; set; }
+    }
+    
+    public class IdentityFramework_JWT
+    {
+        public string SecretKey { get; set; }
+        public string Issuer { get; set; }
+        public string Audience { get; set; }
+        public string Username { get; set; }
+
+        public SigningCredentials SigningCredentials { get; set; }
+    }
+
+Then in the API Startup.cs file add wiring for the new class:
+
+            services.Configure<IdentityFramework_JWT>(Options =>
+                Configuration.GetSection("IdentityFramework_JWT").Bind(Options));
+
+Add the settings in the .JSON file
+
+      "IdentityFramework_JWT": {
+        "SecretKey": "79dcc55f-1992-4182-b285-b2d0196e9e55",
+        "Issuer": "http://identityframework.com",
+        "Audience": "Identity Framework"
+      }
+
+
+add the configuration to Startup.cs
+
+            //add a new auth policy
+            //authorize with "var credentials = new TokenCredentials("<bearer token>");"
+            services.AddAuthorization(auth =>
+            {
+                auth.AddPolicy("Bearer", new AuthorizationPolicyBuilder()
+                    .AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme)
+                    .RequireAuthenticatedUser().Build());
+            });
+
+            //add the JWT authentication
+            services.AddAuthentication(options => { options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme; })
+                .AddJwtBearer(cfg =>
+                {
+                    cfg.RequireHttpsMetadata = false;
+                    cfg.SaveToken = true;
+
+                    cfg.TokenValidationParameters = new TokenValidationParameters()
+                    {
+                        ValidIssuer = Configuration["IdentityFramework_JWT:Issuer"],
+                        ValidAudience = Configuration["IdentityFramework_JWT:Audience"],
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(Configuration["IdentityFramework_JWT:SecretKey"]))
+                    };
+
+                });
+                
+Add the using statements to the userservice:
+
+using System.Security.Claims;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+
+Add a private property to be injected
+
+        private readonly IIdentityFramework_JWT _TokenOptions;
+
+Add to the constructor params:
+
+     IOptions<IdentityFramework_JWT> TokenOptions,
+
+In the constructor add:
+
+     this._TokenOptions = TokenOptions.Value;
+
+
+
+
 Add the following using statements:
 
     using Microsoft.AspNetCore.Authorization;
@@ -287,12 +434,27 @@ and then add
           
           
           
-                      services.AddAuthentication(options =>
+     services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = "Jwt";
+                options.DefaultChallengeScheme = "Jwt";
+            }).AddJwtBearer("Jwt", options =>
+            {
+                options.TokenValidationParameters = new TokenValidationParameters
                 {
-                    //options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                    //options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-                    options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-                });
+                    ValidateAudience = false,
+                    //ValidAudience = "the audience you want to validate",
+                    ValidateIssuer = false,
+                    //ValidIssuer = "the isser you want to validate",
+
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("the secret that needs to be at least 16 characeters long for HmacSha256")),
+
+                    ValidateLifetime = true, //validate the expiration and not before values in the token
+
+                    ClockSkew = TimeSpan.FromMinutes(5) //5 minute tolerance for the expiration date
+                };
+            });
                 
 Also add
 
@@ -300,7 +462,13 @@ Also add
      app.UseAuthentication();
              
              
-             
+
+### Create Email Service
+create class
+
+create settings
+
+
              
              
 ### Configuring the user service             

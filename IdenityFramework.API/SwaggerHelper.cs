@@ -22,6 +22,14 @@ namespace IdentityFramework.API
                 Description = "An API for testing the Identity Framework"
             });
 
+            swaggerGenOptions.AddSecurityDefinition("Bearer", new ApiKeyScheme
+            {
+                Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
+                Name = "Authorization",
+                In = "header",
+                Type = "apiKey"
+            });
+
             //include the XML documentation
             //swaggerGenOptions.DescribeAllEnumsAsStrings();
             //string filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "IdenityFramework.API.xml");
@@ -29,7 +37,7 @@ namespace IdentityFramework.API
             //{
             //    swaggerGenOptions.IncludeXmlComments(filePath);
             //}
-            
+
             //filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "IdentityFramework.Models.xml");
             //if (File.Exists(filePath))
             //{

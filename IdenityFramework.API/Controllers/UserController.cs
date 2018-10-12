@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Net;
+using System.Security.Claims;
+using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
 using IdentityFramework.Models;
@@ -15,6 +18,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
 using NLog;
 using Swashbuckle.AspNetCore.Annotations;
 using SignInResult = Microsoft.AspNetCore.Identity.SignInResult;
@@ -33,6 +37,7 @@ namespace IdentityFramework.API.Controllers
         private readonly ILogger<UserController> _Logger;
         private readonly UserManager<IdentityUser> _UserManager;
         private readonly IEmailService _emailService;
+        private readonly IIdentityFramework_JWT _TokenOptions;
         //private NLog.ILogger _Logger => LogManager.GetLogger(this.GetType().FullName);
 
         public UserController(
@@ -43,6 +48,7 @@ namespace IdentityFramework.API.Controllers
             IUserService UserService,
             UserManager<IdentityUser> userManager,
             ILogger<UserController> logger,
+            IOptions<IdentityFramework_JWT> TokenOptions,
             IEmailService emailService
         )
         {
@@ -54,6 +60,7 @@ namespace IdentityFramework.API.Controllers
             _Cache = MemoryCache ?? new MemoryCache(new MemoryCacheOptions());
             _Logger = logger;
             _emailService = emailService;
+            _TokenOptions = TokenOptions.Value;
         }
 
         [AllowAnonymous]
@@ -108,7 +115,7 @@ namespace IdentityFramework.API.Controllers
         public async Task<IActionResult> Login(string Email, string Password, bool RemeberMe)
         {
             _Logger.LogInformation($"Login for user: {Email}...");
-            SignInResult returnValue = null;
+            string returnValue = null;
 
             #region Validate Parameters
             if (String.IsNullOrEmpty(Email))
@@ -142,6 +149,8 @@ namespace IdentityFramework.API.Controllers
             _Logger.LogInformation($"Login complete.");
             return Ok(returnValue);
         }
+
+        
 
         private void LogInvalidState()
         {
