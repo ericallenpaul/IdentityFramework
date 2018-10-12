@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 
@@ -37,10 +38,11 @@ namespace IdentityFramework.API.Controllers
 
         // GET api/values/5
         [HttpGet]
+        [Authorize]
         [Route("api/v1/GetById", Name = "GetById")]
         public ActionResult<string> GetById(int id)
         {
-            return "value";
+            return "You must be logged in to see this message";
         }
 
         // POST api/values

@@ -5,8 +5,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="LoggerFactory.cs" />
     <Compile Remove="Migrations\20180927194141_no-change.cs" />
     <Compile Remove="Migrations\20180927195025_no-change.cs" />
+    <Compile Remove="NLogLogger.cs" />
   </ItemGroup>
 
   <ItemGroup>

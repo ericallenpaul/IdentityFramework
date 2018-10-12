@@ -30,6 +30,11 @@ Download and Install Syncfusion ES2/MVC
     Install-Package Microsoft.AspNetCore.Owin
     Install-Package Microsoft.AspNetCore.Identity.EntityFrameworkCore 
     Install-Package Microsoft.AspNetCore.WebUtilities
+    
+    NLog.Extensions.Logging
+    NLog.config
+    
+    StructureMap.Microsoft.DependencyInjection
 
 	
 ###### .Cli
@@ -236,9 +241,11 @@ The last step is to wire up the settings in the `startup.cs` file. In the config
 Now we have a class that will be populated with all of our settings. Any Controller with a constructor using "IdentityFrameworkSettings" will automatically be wired up through dependency injection.
 
 ##### Configure AutoMapper
-Now we need to configure 
+Now we need to configure Automapper. Automapper is a great little tool to map those partial classes (DTOs) back to a parent/target class. 
 
-
+#### Configure Nlog
+NLog.Extensions.Logging
+NLog.config
 
 ##### Configure Identity  
 Since we already installed the correct libraries all we need to do now is configure IdentityFramework in the API. Start by changing the MVC Config.  
@@ -273,6 +280,19 @@ and then add
                     
      services.AddDefaultIdentity<IdentityUser>()
           .AddEntityFrameworkStores<ApplicationDbContext>();
+          
+          
+          
+          
+          
+          
+          
+                      services.AddAuthentication(options =>
+                {
+                    //options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                    //options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                    options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                });
                 
 Also add
 

@@ -1,81 +1,162 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using AutoMapper;
 using IdentityFramework.Models;
 using IdentityFramework.Service;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using NLog;
+using Swashbuckle.AspNetCore.Annotations;
+using SignInResult = Microsoft.AspNetCore.Identity.SignInResult;
 
 namespace IdentityFramework.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class UserController : ControllerBase
+    public class UserController : Controller
     {
-        private readonly IMapper _Mapper;
+        //private readonly IMapper _Mapper;
         private readonly ApplicationDbContext _Context;
         private readonly IdentityFrameworkSettings _Settings;
         private readonly IMemoryCache _Cache;
+        private readonly IUserService _UserService;
+        private readonly ILogger<UserController> _Logger;
+        private readonly UserManager<IdentityUser> _UserManager;
+        private readonly IEmailService _emailService;
+        //private NLog.ILogger _Logger => LogManager.GetLogger(this.GetType().FullName);
 
         public UserController(
             ApplicationDbContext Context,
-            IMapper Mapper,
+            //IMapper Mapper,
             IOptions<IdentityFrameworkSettings> Settings,
             IMemoryCache MemoryCache,
-            NLog.ILogger Logger = null
+            IUserService UserService,
+            UserManager<IdentityUser> userManager,
+            ILogger<UserController> logger,
+            IEmailService emailService
         )
         {
             _Context = Context;
-            _Mapper = Mapper;
+            //_Mapper = Mapper;
+            _UserService = UserService;
+            _UserManager = userManager;
             _Settings = Settings.Value;
             _Cache = MemoryCache ?? new MemoryCache(new MemoryCacheOptions());
+            _Logger = logger;
+            _emailService = emailService;
         }
 
-        [ProducesResponseType(typeof(ApiOkResponse), 200)]
-        [ProducesResponseType(typeof(ApiBadRequestResponse), 400)]
-        [ProducesResponseType(typeof(ApiResponse), 500)]
-        [SwaggerOperation(OperationId = "GetNewCertificateLog")]
+        [AllowAnonymous]
+        [ProducesResponseType(typeof(IdentityResult), 200)]
+        [ProducesResponseType(typeof(BadRequestResult), 400)]
+        [ProducesResponseType(500)]
+        [SwaggerOperation(OperationId = "Register")]
         [HttpPost]
-        [Route("api/v1/GetNewCertificateLog", Name = "GetNewCertificateLog")]
-        public async Task<IActionResult> GetNewCertificateLog(int Page, int NumberOfRecords)
+        [Route("api/v1/Register", Name = "Register")]
+        public async Task<IActionResult> Register(string Email, string Password)
         {
-            _Logger.Info($"Getting {NumberOfRecords} of the certificate log: Page {Page} ");
-            List<NewCertificateLog> returnValue = null;
+            _Logger.LogInformation($"Refgistering user {Email}...");
+            IdentityResult returnValue = null;
 
             #region Validate Parameters
-            if (NumberOfRecords == 0)
-                ModelState.AddModelError($"GetNewCertificateLog Error", $"The {nameof(NumberOfRecords)} cannot be zero");
+            if (String.IsNullOrEmpty(Email))
+                ModelState.AddModelError($"Register Error", $"The {nameof(Email)} cannot be zero");
 
             if (!ModelState.IsValid)
             {
                 LogInvalidState();
-                return BadRequest(new ApiBadRequestResponse(ModelState));
+                return BadRequest(ModelState);
             }
             else
             {
-                _Logger.Debug($"ModelState is valid.");
+                _Logger.LogDebug($"ModelState is valid.");
             }
             #endregion Validate Parameters
 
             try
             {
-                returnValue = _NewCertificateLogService.GetAllEntries(Page, NumberOfRecords);
+                 returnValue = await _UserService.Register(Email,Password);
             }
             catch (Exception ex)
             {
-                _Logger.Error($"GetNewCertificateLog Error: {ex}");
-                return StatusCode(500, new ApiResponse(500, $"GetNewCertificateLog Error: {ex}"));
+                _Logger.LogError($"Register Unexpected Error: {ex}");
+                return StatusCode(500, $"Register Unexpected Error: {ex}");
             }
 
             //return the new certificate
-            _Logger.Info($"GetNewCertificateLog complete.");
-            return Ok(new ApiOkResponse(returnValue));
+            _Logger.LogInformation($"Register complete.");
+            return Ok(returnValue);
         }
 
+        [AllowAnonymous]
+        [ProducesResponseType(typeof(IdentityResult), 200)]
+        [ProducesResponseType(typeof(BadRequestResult), 400)]
+        [ProducesResponseType(500)]
+        [SwaggerOperation(OperationId = "Login")]
+        [HttpPost]
+        [Route("api/v1/Login", Name = "Login")]
+        public async Task<IActionResult> Login(string Email, string Password, bool RemeberMe)
+        {
+            _Logger.LogInformation($"Login for user: {Email}...");
+            SignInResult returnValue = null;
+
+            #region Validate Parameters
+            if (String.IsNullOrEmpty(Email))
+                ModelState.AddModelError($"Login Error", $"The {nameof(Email)} cannot be empty");
+
+            if (String.IsNullOrEmpty(Password))
+                ModelState.AddModelError($"Login Error", $"The {nameof(Password)} cannot be empty");
+
+            if (!ModelState.IsValid)
+            {
+                LogInvalidState();
+                return BadRequest(ModelState);
+            }
+            else
+            {
+                _Logger.LogDebug($"ModelState is valid.");
+            }
+            #endregion Validate Parameters
+
+            try
+            {
+                returnValue = await _UserService.Login(Email, Password, RemeberMe);
+            }
+            catch (Exception ex)
+            {
+                _Logger.LogError($"Login Unexpected Error: {ex}");
+                return StatusCode(500, $"Login Unexpected Error: {ex}");
+            }
+
+            //return the new certificate
+            _Logger.LogInformation($"Login complete.");
+            return Ok(returnValue);
+        }
+
+        private void LogInvalidState()
+        {
+            string errors = "";
+
+            foreach (var modelState in ViewData.ModelState.Values)
+            {
+                foreach (ModelError error in modelState.Errors)
+                {
+                    errors += error + " ";
+                }
+            }
+
+            _Logger.LogError($"Invalid ModelState: {errors}");
+        }
 
 
     }
