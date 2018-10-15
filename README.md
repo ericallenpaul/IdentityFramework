@@ -45,7 +45,7 @@ Download and Install Syncfusion ES2/MVC
     Install-Package StructureMap.Microsoft.DependencyInjection (https://andrewlock.net/using-dependency-injection-in-a-net-core-console-application/)
 
 ###### .Models
-    Nothing to do here
+    Install-Package Microsoft.AspNetCore.Identity.EntityFrameworkCore 
 
 ###### .Service
     Install-Package Microsoft.EntityFrameworkCore
@@ -469,7 +469,75 @@ create class
 create settings
 
 
-             
+
+#### Customize Identity  
+Out of the box the identity Framework doesn't support what some might consider standard fields in the user table. It doesn't have First name or last name, for example. So most will want to add some additional columns to the user table. Fortunately this can be done by just extending the existing the existing framework. (You can also override it entirely and create a complete;y custom implementation.) We will aslo add some custom "claims" (permissions) since the only ones supported are UserId and Username.  
+In order to do this we'll need to add 2 classes and then inject them into the configuration. First our custom user class will be added to the models project. Create a class called `ApplicationUser` add the following useing statement:
+
+    using Microsoft.AspNetCore.Identity;
+
+Then add this code for the class:
+
+    public class ApplicationUser : IdentityUser
+    {
+        public string FirstName { get; set; }
+
+        public string LastName { get; set; }
+
+        public string Address { get; set; }
+        
+        public string City { get; set; }
+        
+        public string State { get; set; }
+
+        [Display(Name = "Postal Code")]
+        public string PostalCode { get; set; }
+    }
+
+Next we need to add a class to services that will add first name and last name to our claims. Create a class called `AppClaimsPrincipalFactory`. Add the following using statements:
+
+    using Microsoft.AspNetCore.Identity;
+    using System.Security.Claims;
+    
+ Then add this code for the class:
+ 
+     public class AppClaimsPrincipalFactory : UserClaimsPrincipalFactory<ApplicationUser, IdentityRole>
+    {
+        public AppClaimsPrincipalFactory(
+            UserManager<ApplicationUser> userManager
+            , RoleManager<IdentityRole> roleManager
+            , IOptions<IdentityOptions> optionsAccessor)
+            : base(userManager, roleManager, optionsAccessor)
+        { }
+
+        public async override Task<ClaimsPrincipal> CreateAsync(ApplicationUser user)
+        {
+            var principal = await base.CreateAsync(user);
+
+            if (!string.IsNullOrWhiteSpace(user.FirstName))
+            {
+                ((ClaimsIdentity)principal.Identity).AddClaims(new[] {
+                    new Claim(ClaimTypes.GivenName, user.FirstName)
+                });
+            }
+
+            if (!string.IsNullOrWhiteSpace(user.LastName))
+            {
+                ((ClaimsIdentity)principal.Identity).AddClaims(new[] {
+                    new Claim(ClaimTypes.Surname, user.LastName),
+                });
+            }
+
+            return principal;
+        }
+    }
+
+In the startup.cs class we need to add the following line:
+
+            services.AddScoped<Microsoft.AspNetCore.Identity.IUserClaimsPrincipalFactory<ApplicationUser>, AppClaimsPrincipalFactory>();
+
+
+
              
 ### Configuring the user service             
              

@@ -67,6 +67,8 @@ namespace IdentityFramework.API
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
 
+            services.AddScoped<Microsoft.AspNetCore.Identity.IUserClaimsPrincipalFactory<ApplicationUser>, AppClaimsPrincipalFactory>();
+            
             //wire up the settings
             services.Configure<IdentityFrameworkSettings>(Options =>
                 Configuration.GetSection("IdentityFrameworkSettings").Bind(Options));
