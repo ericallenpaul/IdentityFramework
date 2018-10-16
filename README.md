@@ -59,6 +59,10 @@ Download and Install Syncfusion ES2/MVC
 	Install-Package System.Linq.Dynamic.Core
 	Install-Package Automapper
 
+##### .Web
+    Install-Package Microsoft.Rest.ClientRunTime
+    Install-Package NLog.Web.AspNetCore
+
 ### Service Configuration
 
 Copy .Web ApplicationDbContext to service (change the namespace)
@@ -199,7 +203,17 @@ Populate this class with properties that match the settings in the JSON file. Fo
 
     public class IdentityFrameworkSettings
     {
-        public string ConnectionString { get; set; }
+        public string SmtpServer { get; set; }
+        public string FromAddress { get; set; }
+        public string FromName { get; set; }
+        public string ConfirmEmailUrl { get; set; }
+        public bool LockoutOnFailure { get; set; }
+        public string BaseUrl { get; set; }
+        public string ApiVersion { get; set; }
+        public string BackupDirectory { get; set; }
+        public int KeepLogs { get; set; } = 60;
+        public string RequestBackupFileName { get; set; } = "_Request";
+        public string ResponseBackupFileName { get; set; } = "_Response";
     }
 
 Now we need to add the corresponding property to our JSON file, specifically the appsettings.Development.json file. This is what it will look like after our settings section is added:
@@ -212,8 +226,22 @@ Now we need to add the corresponding property to our JSON file, specifically the
           "Microsoft": "Information"
         }
       },
+      "ConnectionStrings": {
+        "DefaultConnection": "Server=(localdb)\\MSSQLLocalDB;Database=IdentityFrameworkDb;Trusted_Connection=True;MultipleActiveResultSets=true"
+      },
       "IdentityFrameworkSettings": {
-        "ConnectionString": "Server=(localdb)\\MSSQLLocalDB;Database=IdentityFrameworkDb;Trusted_Connection=True;MultipleActiveResultSets=true"
+        "SmtpServer": "localhost",
+        "FromAddress": "if@IdentityFraneWork.com",
+        "FromName": "Identity Framework",
+        "ConfirmEmailUrl": "/Account/ConfirmEmail",
+        "LockoutOnFailure": "true",
+        "BaseUrl": "http:\\\\IdentityFramework.local",
+        "ApiVersion":  "v1" 
+      },
+      "IdentityFramework_JWT": {
+        "SecretKey": "79dcc55f-1992-4182-b285-b2d0196e9e55",
+        "Issuer": "http://identityframework.com",
+        "Audience": "Identity Framework"
       }
     }
 

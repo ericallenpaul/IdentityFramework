@@ -93,7 +93,6 @@ namespace IdentityFramework.API
                 {
                     cfg.RequireHttpsMetadata = false;
                     cfg.SaveToken = true;
-
                     cfg.TokenValidationParameters = new TokenValidationParameters()
                     {
                         ValidIssuer = Configuration["IdentityFramework_JWT:Issuer"],
@@ -149,7 +148,8 @@ namespace IdentityFramework.API
 
             app.UseStaticFiles();
             app.UseCookiePolicy();
-            
+
+
             //use Identity Framework
             app.UseAuthentication(); 
             app.UseHttpsRedirection();
