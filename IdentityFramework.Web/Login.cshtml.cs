@@ -101,29 +101,29 @@ namespace IdentityFramework.Web
                 {
                     string url = $"/api/user/{_Settings.ApiVersion}/login";
 
-                    //set up the client
-                    client.BaseAddress = new Uri(_Settings.BaseUrl);
-                    client.DefaultRequestHeaders.Accept.Clear();
-                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                    client.Timeout = new TimeSpan(9, 9, 9, 9);
+                    ////set up the client
+                    //client.BaseAddress = new Uri(_Settings.BaseUrl);
+                    //client.DefaultRequestHeaders.Accept.Clear();
+                    //client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                    //client.Timeout = new TimeSpan(9, 9, 9, 9);
 
-                    // This doesn't count login failures towards account lockout
-                    // To enable password failures to trigger account lockout, set lockoutOnFailure: true
-                    var jwt = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: true);
+                    //// This doesn't count login failures towards account lockout
+                    //// To enable password failures to trigger account lockout, set lockoutOnFailure: true
+                    //var jwt = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: true);
 
-                    var json = JsonConvert.SerializeObject(Request);
-                    var stringContent = new StringContent(json, Encoding.UTF8, "application/json");
+                    //var json = JsonConvert.SerializeObject(Request);
+                    //var stringContent = new StringContent(json, Encoding.UTF8, "application/json");
 
-                    var apiResult = client.PostAsync(url, stringContent).Result;
+                    //var apiResult = client.PostAsync(url, stringContent).Result;
 
-                    if (!apiResult.IsSuccessStatusCode)
-                    {
-                    }
+                    //if (!apiResult.IsSuccessStatusCode)
+                    //{
+                    //}
 
                     CookieOptions option = new CookieOptions();
                     option.Expires = DateTime.Now.AddMinutes(60);
                     option.HttpOnly = true;
-                    Response.Cookies.Append("token", jwt, option);
+                    //Response.Cookies.Append("token", jwt, option);
 
                     //read cookie from Request object  
                     //string cookieValueFromReq = Request.Cookies["Key"];
@@ -134,25 +134,25 @@ namespace IdentityFramework.Web
 
 
 
-                if (result.Succeeded)
-                {
-                    _logger.LogInformation($"User: {Input.Email} logged in.");
-                    return LocalRedirect(returnUrl);
-                }
-                if (result.RequiresTwoFactor)
-                {
-                    return RedirectToPage("./LoginWith2fa", new { ReturnUrl = returnUrl, RememberMe = Input.RememberMe });
-                }
-                if (result.IsLockedOut)
-                {
-                    _logger.LogWarning("User account locked out.");
-                    return RedirectToPage("./Lockout");
-                }
-                else
-                {
-                    ModelState.AddModelError(string.Empty, "Invalid login attempt.");
-                    return Page();
-                }
+                //if (result.Succeeded)
+                //{
+                //    _logger.LogInformation($"User: {Input.Email} logged in.");
+                //    return LocalRedirect(returnUrl);
+                //}
+                //if (result.RequiresTwoFactor)
+                //{
+                //    return RedirectToPage("./LoginWith2fa", new { ReturnUrl = returnUrl, RememberMe = Input.RememberMe });
+                //}
+                //if (result.IsLockedOut)
+                //{
+                //    _logger.LogWarning("User account locked out.");
+                //    return RedirectToPage("./Lockout");
+                //}
+                //else
+                //{
+                //    ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+                //    return Page();
+                //}
             }
 
             // If we got this far, something failed, redisplay form

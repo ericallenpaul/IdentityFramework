@@ -76,7 +76,7 @@ namespace IdentityFramework.API
                 Configuration.GetSection("IdentityFramework_JWT").Bind(Options));
 
             //Register Services
-            services.RegisterMyServices();
+            services.RegisterMyServices(Configuration);
 
             //add a new auth policy
             //authorize with "var credentials = new TokenCredentials("<bearer token>");"
