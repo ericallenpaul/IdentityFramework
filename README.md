@@ -600,3 +600,12 @@ https://github.com/DmitrySikorsky/AspNetCoreCustomUserManager/tree/master/AspNet
  https://docs.microsoft.com/en-us/dotnet/standard/microservices-architecture/microservice-ddd-cqrs-patterns/enumeration-classes-over-enum-types
  https://lostechies.com/jimmybogard/2008/08/12/enumeration-classes/
  https://eliot-jones.com/2015/3/entity-framework-enum
+
+ 
+ #### Dependecey injection duplication
+https://medium.com/tech-feed/asp-net-core-web-api-avoid-dependency-injection-duplication-6dacdeb36454
+
+https://www.strathweb.com/2018/06/controllers-as-action-filters-in-asp-net-core-mvc/
+
+
+Fix _LoginPartial

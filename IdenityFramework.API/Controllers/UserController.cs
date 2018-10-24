@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
@@ -38,6 +39,7 @@ namespace IdentityFramework.API.Controllers
         private readonly UserManager<IdentityUser> _UserManager;
         private readonly IEmailService _emailService;
         private readonly IIdentityFramework_JWT _TokenOptions;
+        
         //private NLog.ILogger _Logger => LogManager.GetLogger(this.GetType().FullName);
 
         public UserController(
@@ -69,7 +71,7 @@ namespace IdentityFramework.API.Controllers
         [ProducesResponseType(500)]
         [SwaggerOperation(OperationId = "Register")]
         [HttpPost]
-        [Route("api/v1/Register", Name = "Register")]
+        [Route("v1/Register", Name = "Register")]
         public async Task<IActionResult> Register(string Email, string Password)
         {
             _Logger.LogInformation($"Refgistering user {Email}...");
@@ -111,7 +113,7 @@ namespace IdentityFramework.API.Controllers
         [ProducesResponseType(500)]
         [SwaggerOperation(OperationId = "Login")]
         [HttpPost]
-        [Route("api/v1/Login", Name = "Login")]
+        [Route("v1/Login", Name = "Login")]
         public async Task<IActionResult> Login(string Email, string Password, bool RemeberMe)
         {
             _Logger.LogInformation($"Login for user: {Email}...");

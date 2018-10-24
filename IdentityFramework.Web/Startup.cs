@@ -43,11 +43,12 @@ namespace IdentityFramework.Web
             //wire up the settings
             services.Configure<IdentityFrameworkSettings>(Options =>
                 Configuration.GetSection("IdentityFrameworkSettings").Bind(Options));
-            services.Configure<IdentityFramework_JWT>(Options =>
-                Configuration.GetSection("IdentityFramework_JWT").Bind(Options));
 
             //add memory cache
             services.AddMemoryCache();
+
+            //Register Services
+            services.RegisterMyServices(Configuration);
 
             //services.AddDbContext<ApplicationDbContext>(options =>
             //    options.UseSqlServer(
@@ -81,7 +82,7 @@ namespace IdentityFramework.Web
             app.UseCookiePolicy();
 
      
-            app.UseAuthentication();
+            //app.UseAuthentication();
 
             app.UseMvc(routes =>
             {
