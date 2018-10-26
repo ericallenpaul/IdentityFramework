@@ -99,7 +99,7 @@ namespace IdentityFramework.API.Controllers
             catch (Exception ex)
             {
                 _Logger.LogError($"Register Unexpected Error: {ex}");
-                return StatusCode(500, $"Register Unexpected Error: {ex}");
+                return StatusCode(500, $"Register Unexpected Error: {Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")} {ex}");
             }
 
             //return the new certificate
