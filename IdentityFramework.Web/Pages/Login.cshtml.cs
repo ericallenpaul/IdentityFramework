@@ -75,7 +75,7 @@ namespace IdentityFramework.Web
             if (ModelState.IsValid)
             {
                 
-                string url = $"/api/user/{_Settings.ApiVersion}/login";
+                string url = $"api/user/{_Settings.ApiVersion}/login";
                 _Client.DefaultRequestHeaders.Accept.Clear();
                 _Client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                 _Client.Timeout = new TimeSpan(9, 9, 9, 9);

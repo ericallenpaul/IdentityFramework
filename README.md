@@ -60,7 +60,7 @@ Download and Install Syncfusion ES2/MVC
 	Install-Package Automapper
 
 ##### .Web
-    Install-Package Microsoft.Rest.ClientRunTime
+    ??? Install-Package Microsoft.Rest.ClientRunTime
     Install-Package NLog.Web.AspNetCore
 
 ### Service Configuration

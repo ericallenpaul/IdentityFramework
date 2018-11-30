@@ -74,7 +74,7 @@ namespace IdentityFramework.API.Controllers
         [Route("v1/Register", Name = "Register")]
         public async Task<IActionResult> Register(string Email, string Password)
         {
-            _Logger.LogInformation($"Refgistering user {Email}...");
+            _Logger.LogInformation($"Registering user {Email}...");
             IdentityResult returnValue = null;
 
             #region Validate Parameters
