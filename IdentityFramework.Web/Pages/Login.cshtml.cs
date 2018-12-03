@@ -75,15 +75,21 @@ namespace IdentityFramework.Web
             if (ModelState.IsValid)
             {
                 
-                string url = $"api/user/{_Settings.ApiVersion}/login";
+                string url = $"api/User/{_Settings.ApiVersion}/Login";
                 _Client.DefaultRequestHeaders.Accept.Clear();
                 _Client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                 _Client.Timeout = new TimeSpan(9, 9, 9, 9);
 
-                var json = JsonConvert.SerializeObject(Input);
-                var stringContent = new StringContent(json, Encoding.UTF8, "application/json");
+                //var json = JsonConvert.SerializeObject(Input);
+                //var stringContent = new StringContent(json, Encoding.UTF8, "application/json");
 
-                var apiResult = _Client.PostAsync(url, stringContent).Result;
+                var values = new Dictionary<string, string>();
+                values.Add("Email", Input.Email);
+                values.Add("Password", Input.Password);
+                values.Add("RememberMe", Input.RememberMe.ToString());
+                var content = new FormUrlEncodedContent(values);
+
+                var apiResult = _Client.PostAsync(url, content).Result;
 
                 if (!apiResult.IsSuccessStatusCode)
                 {
