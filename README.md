@@ -55,9 +55,10 @@ Download and Install Syncfusion ES2/MVC
 	Install-Package Microsoft.AspNetCore.Identity.EntityFrameworkCore
 	Install-Package Microsoft.AspNetCore.Owin
 	Install-Package Newtonsoft.json
-	Install-Package Nlog
+	Nlog
 	Install-Package System.Linq.Dynamic.Core
 	Install-Package Automapper
+	Install-Package Microsoft.AspNetCore.Mvc
 
 ##### .Web
     ??? Install-Package Microsoft.Rest.ClientRunTime
