@@ -97,6 +97,8 @@ namespace IdentityFramework.API
                     {
                         ValidIssuer = Configuration["IdentityFramework_JWT:Issuer"],
                         ValidAudience = Configuration["IdentityFramework_JWT:Audience"],
+                        ValidateLifetime = true, //validate the expiration
+                        ClockSkew = TimeSpan.FromMinutes(5), //add a 5 minute tolerance for the expiration date
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(Configuration["IdentityFramework_JWT:SecretKey"]))
                     };
 

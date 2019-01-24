@@ -3,6 +3,8 @@ Put all of the pieces in place for the .Net Core Identity Framework and separate
 Break IF into seperate class  
 Hold the Database Context in a seperate class  
 
+Refresh Tokens
+
 
 Make sure your environment variables are set
 
@@ -575,6 +577,8 @@ In the startup.cs class we need to add the following line:
 using Microsoft.AspNetCore.Identity.UI.Services;
 
 
+
+JWT Offical Claims: https://tools.ietf.org/html/rfc7519#page-9
              
              
              
