@@ -32,7 +32,7 @@ Download and Install Syncfusion ES2/MVC
     Install-Package Microsoft.AspNetCore.Owin
     Install-Package Microsoft.AspNetCore.Identity.EntityFrameworkCore 
     Install-Package Microsoft.AspNetCore.WebUtilities
-    
+    Install-Package Microsoft.Extensions.PlatformAbstractions  
     Install-Package NLog.Extensions.Logging
     Install-Package Microsoft.IdentityModel.Tokens
     
