@@ -38,6 +38,14 @@ Download and Install Syncfusion ES2/MVC
     Install-Package NLog.Extensions.Logging
     Install-Package Microsoft.IdentityModel.Tokens
     
+    Microsoft.AspNetCore.Authentication
+Microsoft.AspNetCore.Session
+Microsoft.AspNetCore.HttpsPolicy
+Microsoft.AspNetCore.CookiePolicy
+Microsoft.AspNetCore.StaticFiles
+    
+    
+    
     StructureMap.Microsoft.DependencyInjection
 
 	
