@@ -39,11 +39,11 @@ Download and Install Syncfusion ES2/MVC
     Install-Package Microsoft.IdentityModel.Tokens
     
     Microsoft.AspNetCore.Authentication
-Microsoft.AspNetCore.Session
-Microsoft.AspNetCore.HttpsPolicy
-Microsoft.AspNetCore.CookiePolicy
-Microsoft.AspNetCore.StaticFiles
-    
+    Microsoft.AspNetCore.Session
+    Microsoft.AspNetCore.HttpsPolicy
+    Microsoft.AspNetCore.CookiePolicy
+    Microsoft.AspNetCore.StaticFiles
+    Microsoft.AspNetCore 
     
     
     StructureMap.Microsoft.DependencyInjection
