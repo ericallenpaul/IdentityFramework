@@ -5,6 +5,8 @@ Hold the Database Context in a seperate class
 
 Refresh Tokens
 
+PlatformServices is obsolete
+https://developers.de/blogs/holger_vetter/archive/2017/06/30/swagger-includexmlcomments-platformservices-obsolete-replacement.aspx
 
 Make sure your environment variables are set
 
