@@ -1,4 +1,4 @@
-# IdentityFramework
+# IdentityFramework -- THIS IS A WORK IN PROGRESS, It's not Finishsed
 Put all of the pieces in place for the .Net Core Identity Framework and separate DBContext  
 Break IF into seperate class  
 Hold the Database Context in a seperate class  
