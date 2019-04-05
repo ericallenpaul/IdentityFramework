@@ -3,6 +3,15 @@ Put all of the pieces in place for the .Net Core Identity Framework and separate
 Break IF into seperate class  
 Hold the Database Context in a seperate class  
 
+
+JWT
+https://jwt.io/introduction/
+
+Token Claim Names
+https://www.iana.org/assignments/jwt/jwt.xhtml
+
+
+
 Refresh Tokens
 
 PlatformServices is obsolete
